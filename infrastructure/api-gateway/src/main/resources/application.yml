@@ -7,36 +7,46 @@ spring:
 
   cloud:
     gateway:
-      routes:
+      server:
+        webflux:
+          routes:
 
-        - id: auth-service
-          uri: lb://AUTH-SERVICE
-          predicates:
-            - Path=/auth/**
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/auth/**
 
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/user-service/**
-          filters:
-            - StripPrefix=1
-            - JwtAuthenticationFilter
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/user-service/**
+              filters:
+                - StripPrefix=1
+                - JwtAuthenticationFilter
 
-        - id: product-service
-          uri: lb://PRODUCT-SERVICE
-          predicates:
-            - Path=/product-service/**
-          filters:
-            - StripPrefix=1
-            - JwtAuthenticationFilter
+            - id: product-service
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/product-service/**
+              filters:
+                - StripPrefix=1
+                - JwtAuthenticationFilter
 
-        - id: order-service
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/order-service/**
-          filters:
-            - StripPrefix=1
-            - JwtAuthenticationFilter
+            - id: order-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/order-service/**
+              filters:
+                - StripPrefix=1
+                - JwtAuthenticationFilter
+
+            - id: cart-service
+              uri: lb://CART-SERVICE
+              predicates:
+                - Path=/cart-service/**
+              filters:
+                - StripPrefix=1
+                - JwtAuthenticationFilter
 
 eureka:
   client:
