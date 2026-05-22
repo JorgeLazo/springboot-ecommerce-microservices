@@ -21,6 +21,7 @@ public class CheckoutService {
         this.productClient = productClient;
     }
 
+    @CircuitBreaker(name = "orderService", fallbackMethod = "checkoutFallback")
     public Map<String, Object> checkout() {
 
         return Map.of(
@@ -30,5 +31,9 @@ public class CheckoutService {
         );
     }
 
-    
+    public Map<String, Object> checkoutFallback(Throwable ex) {
+        return Map.of(
+                "message", "Product service unavailable"
+        );
+    }
 }

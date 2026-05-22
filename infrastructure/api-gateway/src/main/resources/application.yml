@@ -1,59 +1,6 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: api-gateway
 
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-
-            - id: auth-service
-              uri: lb://AUTH-SERVICE
-              predicates:
-                - Path=/auth/**
-
-            - id: user-service
-              uri: lb://USER-SERVICE
-              predicates:
-                - Path=/user-service/**
-              filters:
-                - StripPrefix=1
-                - JwtAuthenticationFilter
-
-            - id: product-service
-              uri: lb://PRODUCT-SERVICE
-              predicates:
-                - Path=/product-service/**
-              filters:
-                - StripPrefix=1
-                - JwtAuthenticationFilter
-
-            - id: order-service
-              uri: lb://ORDER-SERVICE
-              predicates:
-                - Path=/order-service/**
-              filters:
-                - StripPrefix=1
-                - JwtAuthenticationFilter
-
-            - id: cart-service
-              uri: lb://CART-SERVICE
-              predicates:
-                - Path=/cart-service/**
-              filters:
-                - StripPrefix=1
-                - JwtAuthenticationFilter
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-  instance:
-    instance-id: localhost:api-gateway:${server.port}
-    hostname: localhost
-    prefer-ip-address: false
+  config:
+    import: optional:configserver:http://localhost:8888

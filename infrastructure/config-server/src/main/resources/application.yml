@@ -12,7 +12,7 @@ spring:
     config:
       server:
         native:
-          search-locations: classpath:/config
+          search-locations: file:../../config-repo
 
 eureka:
   client:
@@ -20,12 +20,5 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
   instance:
-    instance-id: localhost:config-server:${server.port}
     hostname: localhost
-    prefer-ip-address: false
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+    instance-id: localhost:config-server:${server.port}
