@@ -1,4 +1,4 @@
-package com.jorgelazo.product.dto.mapper;
+package com.jorgelazo.product.mapper;
 
 import org.springframework.stereotype.Component;
 

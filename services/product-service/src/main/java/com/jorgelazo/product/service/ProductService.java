@@ -1,10 +1,10 @@
 package com.jorgelazo.product.service;
 
-import com.jorgelazo.product.dto.mapper.ProductMapper;
 import com.jorgelazo.product.dto.request.ProductRequest;
 import com.jorgelazo.product.dto.response.ProductResponse;
 import com.jorgelazo.product.entity.Product;
 import com.jorgelazo.product.exception.ProductNotFoundException;
+import com.jorgelazo.product.mapper.ProductMapper;
 import com.jorgelazo.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,16 +40,14 @@ public class ProductService {
 
     public ProductResponse findById(Long id){
 
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " was not found"));
+        Product product = getProduct(id);
 
         return mapper.toResponse(product);
     }
 
     public ProductResponse update(Long id, ProductRequest productRequest){
 
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " was not found"));
+        Product product = getProduct(id);
 
         product.setName(productRequest.getName());
         product.setStock(productRequest.getStock());
@@ -62,9 +60,13 @@ public class ProductService {
 
     public void delete(Long id){
 
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " was not found"));
+        Product product = getProduct(id);
 
         repository.delete(product);
+    }
+
+    private Product getProduct(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " was not found"));
     }
 }
