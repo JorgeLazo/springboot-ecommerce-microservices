@@ -21,22 +21,26 @@ public class DataLoader implements CommandLineRunner {
 
             repository.save(new Product(
                     "MacBook Pro",
-                    1599.99
+                    1599.99,
+                    10
             ));
 
             repository.save(new Product(
                     "iPhone 16",
-                    999.99
+                    999.99,
+                    25
             ));
 
             repository.save(new Product(
                     "Samsung Galaxy S26",
-                    1099.99
+                    1099.99,
+                    15
             ));
 
             repository.save(new Product(
                     "Sony WH-1000XM6",
-                    399.99
+                    399.99,
+                    5
             ));
         }
     }
