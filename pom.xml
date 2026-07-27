@@ -20,6 +20,7 @@
     </properties>
 
     <modules>
+        <module>common-lib</module>
         <module>infrastructure/discovery-server</module>
         <module>infrastructure/api-gateway</module>
         <module>services/user-service</module>

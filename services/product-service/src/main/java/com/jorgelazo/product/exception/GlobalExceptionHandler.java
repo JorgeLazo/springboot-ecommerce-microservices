@@ -10,7 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.jorgelazo.product.dto.response.ApiError;
+import com.jorgelazo.common.dto.ApiError;
 
 import jakarta.servlet.http.HttpServletRequest;
 

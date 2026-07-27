@@ -1,4 +1,4 @@
-package com.jorgelazo.product.dto.response;
+package com.jorgelazo.common.dto;
 
 import java.time.LocalDateTime;
 import java.util.Map;
