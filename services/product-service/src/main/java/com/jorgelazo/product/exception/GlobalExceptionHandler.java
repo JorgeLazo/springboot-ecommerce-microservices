@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jorgelazo.common.dto.ApiError;
+import com.jorgelazo.common.exception.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -41,8 +42,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiError);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ApiError> handleProductNotFoundException( ProductNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleProductNotFoundException( ResourceNotFoundException ex, HttpServletRequest request) {
     
         ApiError apiError = new ApiError(
             LocalDateTime.now(),

@@ -1,9 +1,9 @@
 package com.jorgelazo.product.service;
 
+import com.jorgelazo.common.exception.ResourceNotFoundException;
 import com.jorgelazo.product.dto.request.ProductRequest;
 import com.jorgelazo.product.dto.response.ProductResponse;
 import com.jorgelazo.product.entity.Product;
-import com.jorgelazo.product.exception.ProductNotFoundException;
 import com.jorgelazo.product.mapper.ProductMapper;
 import com.jorgelazo.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -67,6 +67,6 @@ public class ProductService {
 
     private Product getProduct(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " was not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
     }
 }
