@@ -12,9 +12,14 @@ public class ProductMapper {
     public Product toEntity(ProductRequest productRequest) {
         
         Product product = new Product();
+        product.setSku(productRequest.getSku());
         product.setName(productRequest.getName());
+        product.setDescription(productRequest.getDescription());
+        product.setBrand(productRequest.getBrand());
+        product.setCategory(productRequest.getCategory());
         product.setPrice(productRequest.getPrice());
         product.setStock(productRequest.getStock());
+        product.setStatus(productRequest.getStatus());
 
         return product;
     }
@@ -23,9 +28,14 @@ public class ProductMapper {
         
         return new ProductResponse(
             product.getId(),
+            product.getSku(),
             product.getName(),
+            product.getDescription(),
+            product.getBrand(),
+            product.getCategory(),
             product.getPrice(),
-            product.getStock()
-        );
+            product.getStock(),
+            product.getStatus());
+            
     }
 }

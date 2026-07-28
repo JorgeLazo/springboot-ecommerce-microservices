@@ -5,6 +5,8 @@ import com.jorgelazo.product.repository.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import com.jorgelazo.product.entity.ProductStatus;
+
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -19,29 +21,13 @@ public class DataLoader implements CommandLineRunner {
 
         if (repository.count() == 0) {
 
-            repository.save(new Product(
-                    "MacBook Pro",
-                    1599.99,
-                    10
-            ));
+            repository.save(
+                new Product("SKU001", "Product 1", "Description 1", "Brand A", "Category X", 10.0, 100, ProductStatus.ACTIVE));
+            repository.save(
+                new Product("SKU002", "Product 2", "Description 2", "Brand B", "Category Y", 20.0, 200, ProductStatus.ACTIVE));
+            repository.save(
+                new Product("SKU003", "Product 3", "Description 3", "Brand C", "Category Z", 30.0, 300, ProductStatus.INACTIVE));
 
-            repository.save(new Product(
-                    "iPhone 16",
-                    999.99,
-                    25
-            ));
-
-            repository.save(new Product(
-                    "Samsung Galaxy S26",
-                    1099.99,
-                    15
-            ));
-
-            repository.save(new Product(
-                    "Sony WH-1000XM6",
-                    399.99,
-                    5
-            ));
         }
     }
 }

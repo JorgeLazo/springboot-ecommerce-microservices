@@ -49,9 +49,14 @@ public class ProductService {
 
         Product product = getProduct(id);
 
+        product.setSku(productRequest.getSku());
         product.setName(productRequest.getName());
-        product.setStock(productRequest.getStock());
-        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+        product.setBrand(productRequest.getBrand());
+        product.setCategory(productRequest.getCategory());
+        product.changePrice(productRequest.getPrice());
+        product.updateStock(productRequest.getStock());
+        product.activate();
 
         Product updatedProduct = repository.save(product);
 
