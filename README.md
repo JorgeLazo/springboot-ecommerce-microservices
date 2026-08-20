@@ -1,301 +1,100 @@
-# Spring Boot E-Commerce Microservices
-
-Enterprise-grade e-commerce platform built with **Java 21**, **Spring Boot 3.5**, **Spring Cloud 2025**, and **centralized configuration architecture**.
-
-This project demonstrates production-style microservices communication, service discovery, authentication, API gateway security, resilience patterns, and modular monorepo architecture.
-
----
-
-# Architecture
-
-```plaintext
-Client
-   ↓
-API Gateway (JWT Filter)
-   ↓
-Service Discovery (Eureka)
-   ↓
-Config Server
-   ↓
-Microservices
-   ├── Auth Service
-   ├── User Service
-   ├── Product Service
-   ├── Order Service
-   └── Cart Service
-```
-
----
-
-# Repository Structure
-
-```plaintext
-ecommerce-microservices/
-
-├── infrastructure/
-│   ├── discovery-server
-│   ├── config-server
-│   └── api-gateway
-│
-├── services/
-│   ├── auth-service
-│   ├── user-service
-│   ├── product-service
-│   ├── order-service
-│   └── cart-service
-│
-├── config-repo/
-│   ├── api-gateway.yml
-│   ├── auth-service.yml
-│   ├── user-service.yml
-│   ├── product-service.yml
-│   ├── order-service.yml
-│   └── cart-service.yml
-│
-├── shared/
-│   └── common-core
-│
-├── pom.xml
-└── README.md
-```
+# 🛒 Spring Boot E-commerce Microservices
 
----
+Proyecto personal desarrollado con **Java 21**, **Spring Boot 3.5**, **Spring Cloud** y arquitectura de **microservicios**.
 
-# Services
+El objetivo del proyecto es construir una plataforma de e-commerce con buenas prácticas de arquitectura, comunicación entre microservicios y despliegue Cloud Native.
 
-| Service | Port |
-|---------|------|
-| Eureka Discovery Server | 8761 |
-| Config Server | 8888 |
-| API Gateway | 8080 |
-| User Service | 8081 |
-| Product Service | 8082 |
-| Order Service | 8083 |
-| Auth Service | 8084 |
-| Cart Service | 8085 |
+## Arquitectura
 
----
+* API Gateway
+* Eureka Discovery Server
+* Spring Cloud Config Server
+* User Service
+* Product Service
+* Cart Service
+* Order Service
+* Common Library (DTOs compartidos)
 
-# Tech Stack
+## Tecnologías
 
-## Core
+| Tecnología              | Uso                               |
+| ----------------------- | --------------------------------- |
+| Java 21                 | Lenguaje principal                |
+| Spring Boot 3.5         | Framework                         |
+| Spring Cloud 2025       | Microservicios                    |
+| Spring Data JPA         | Persistencia                      |
+| OpenFeign               | Comunicación entre microservicios |
+| H2 / PostgreSQL         | Base de datos                     |
+| Maven Multi Module      | Organización del proyecto         |
+| Docker *(próximamente)* | Contenedores                      |
 
-- Java 21
-- Spring Boot 3.5
-- Spring Cloud 2025
-- Maven Multi-module
+## Microservicios implementados
 
-## Infrastructure
+### User Service
 
-- Eureka Discovery Server
-- Spring Cloud Config Server
-- Spring Cloud Gateway
+* CRUD de usuarios.
+* DTO + Mapper.
+* Bean Validation.
+* Global Exception Handler.
 
-## Security
+### Product Service
 
-- JWT Authentication
-- Gateway Security Filter
+* Gestión de catálogo de productos.
+* Reglas de negocio de inventario.
+* DTO + Mapper.
+* Validaciones.
+* Manejo global de excepciones.
 
-## Persistence
+### Cart Service
 
-- Spring Data JPA
-- H2 Database
+* Carrito como Aggregate Root.
+* Agregar productos.
+* Eliminar productos.
+* Actualizar cantidades.
+* Vaciar carrito.
+* Checkout (stub).
+* Integración con Product Service mediante OpenFeign.
 
-## Resilience
+### Order Service
 
-- OpenFeign
-- Circuit Breaker
-- Fallback Handling
+* Creación de órdenes.
+* Historial por usuario.
+* Cancelación de órdenes.
+* Cambio de estado de la orden.
+* Aggregate Root con reglas de negocio.
 
----
+## Estado del proyecto
 
-# Features Implemented
+### Semana 1 — Backend Core
 
-## Infrastructure
+* [x] Eureka Discovery Server.
+* [x] Config Server.
+* [x] API Gateway.
+* [x] User Service.
+* [x] Product Service.
+* [x] Cart Service.
+* [x] Order Service.
 
-- Service Discovery with Eureka
-- Centralized Configuration Server
-- Dynamic Service Registration
-- Distributed Config Repository
+### Próximos Sprints
 
-## Security
+* [ ] Checkout Cart → Order.
+* [ ] Reserva de stock.
+* [ ] JWT Authentication.
+* [ ] Docker Compose.
+* [ ] PostgreSQL.
+* [ ] Azure Deployment.
+* [ ] GitHub Actions CI/CD.
 
-- JWT Token Generation
-- Gateway Authentication Filter
-- Protected Routes
-- Public Auth Endpoint
+## Arquitectura del dominio
 
-## Business Services
+* Cart es el Aggregate Root del carrito.
+* Order es el Aggregate Root de las órdenes.
+* La lógica de negocio vive dentro de las entidades del dominio.
+* Los Services coordinan casos de uso.
+* Los Controllers exponen la API REST.
 
-- User Management
-- Product Catalog
-- Order Processing
-- Shopping Cart
+## Autor
 
-## Communication
+**Jorge Lazo Guajardo**
 
-- OpenFeign Inter-service Calls
-- Circuit Breaker Fallback Strategy
-
----
-
-# Run Locally
-
-Start services in this order:
-
-```bash
-mvn spring-boot:run -pl infrastructure/discovery-server
-mvn spring-boot:run -pl infrastructure/config-server
-mvn spring-boot:run -pl services/auth-service
-mvn spring-boot:run -pl services/user-service
-mvn spring-boot:run -pl services/product-service
-mvn spring-boot:run -pl services/order-service
-mvn spring-boot:run -pl services/cart-service
-mvn spring-boot:run -pl infrastructure/api-gateway
-```
-
----
-
-# Build
-
-```bash
-mvn clean install
-```
-
----
-
-# Authentication
-
-Login:
-
-```http
-POST http://localhost:8080/auth/login
-```
-
-Body:
-
-```json
-{
-  "username": "admin",
-  "password": "admin"
-}
-```
-
-Response:
-
-```json
-{
-  "token": "JWT_TOKEN"
-}
-```
-
-Use token:
-
-```http
-Authorization: Bearer JWT_TOKEN
-```
-
----
-
-# API Endpoints
-
-## Users
-
-```http
-GET /user-service/users
-```
-
-## Products
-
-```http
-GET /product-service/products
-POST /product-service/products
-```
-
-## Orders
-
-```http
-GET /order-service/orders
-GET /order-service/orders/checkout
-```
-
-## Cart
-
-```http
-GET /cart-service/cart
-```
-
----
-
-# Config Server Validation
-
-```http
-GET http://localhost:8888/product-service/default
-GET http://localhost:8888/user-service/default
-GET http://localhost:8888/api-gateway/default
-```
-
----
-
-# Resilience Testing
-
-Stop Product Service and call:
-
-```http
-GET /order-service/orders/checkout
-```
-
-Expected:
-
-Fallback response instead of internal server error.
-
----
-
-# Current Progress
-
-- [x] Monorepo Bootstrap
-- [x] Eureka Discovery
-- [x] Config Server
-- [x] API Gateway
-- [x] JWT Security
-- [x] Auth Service
-- [x] User Service
-- [x] Product Service
-- [x] Order Service
-- [x] Cart Service
-- [x] OpenFeign Communication
-- [x] Circuit Breaker
-- [x] Centralized Config Repo
-- [ ] Docker Compose
-- [ ] Kafka Event Streaming
-- [ ] Observability Stack
-- [ ] Distributed Tracing
-- [ ] PostgreSQL Migration
-- [ ] Kubernetes Deployment
-
----
-
-# Goals
-
-This project demonstrates:
-
-- Enterprise Java Architecture
-- Cloud-native Backend Engineering
-- Distributed Systems Design
-- Secure API Gateway Architecture
-- Resilient Microservices Communication
-- Production-ready Modular Design
-
----
-
-# Author
-
-**Jorge Lazo**
-
-Backend Engineer focused on:
-
-- Java / Spring Ecosystem
-- Microservices Architecture
-- Cloud-native Backend Systems
-- Distributed Systems Design
-- Enterprise Software Engineering
+Backend Java Developer | Spring Boot | Microservices | Spring Cloud
