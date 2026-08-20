@@ -1,12 +1,12 @@
-package com.jorgelazo.cart.entity;
+package com.jorgelazo.order.entity;
 
 import java.math.BigDecimal;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cart_items")
-public class CartItem {
+@Table(name = "order_items")
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +23,12 @@ public class CartItem {
     private BigDecimal subtotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @JoinColumn(name = "order_id")
+    private Order order;
+    
+    public OrderItem() {}
 
-    public CartItem() {}
-
-    public CartItem(Long productId, String productName, BigDecimal unitPrice, Integer quantity) 
+    public OrderItem(Long productId, String productName, BigDecimal unitPrice, Integer quantity) 
     {
         this.productId = productId;
         this.productName = productName;
@@ -47,23 +47,28 @@ public class CartItem {
     public BigDecimal getUnitPrice() { return unitPrice; }
     
     public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-        calculateSubtotal();
-    }
+            this.unitPrice = unitPrice;
+            calculateSubtotal();
+        }
 
     public Integer getQuantity() { return quantity; }
-    
+
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
         calculateSubtotal();
     }
-    
+
     public BigDecimal getSubtotal() { return subtotal; }
     public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 
-    public Cart getCart() { return cart; }
-    public void setCart(Cart cart) { this.cart = cart; }
-    
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     private void calculateSubtotal() {
         if (unitPrice != null && quantity != null) {
             this.subtotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
@@ -74,4 +79,6 @@ public class CartItem {
         this.quantity = newQuantity;
         calculateSubtotal();
     }
+
+
 }

@@ -1,27 +1,33 @@
-package com.jorgelazo.cart.dto.response;
+package com.jorgelazo.order.dto.response;
 
 import java.math.BigDecimal;
 
-public class CartItemResponse {
+public class OrderItemResponse {
 
     private Long productId;
+
     private String productName;
-    private Integer quantity;
+
     private BigDecimal unitPrice;
+
+    private Integer quantity;
+
     private BigDecimal subtotal;
 
-    public CartItemResponse() {
+    public OrderItemResponse() {
     }
 
-    public CartItemResponse(Long productId,
-                            String productName,
-                            Integer quantity,
-                            BigDecimal unitPrice,
-                            BigDecimal subtotal) {
+    public OrderItemResponse(
+            Long productId,
+            String productName,
+            BigDecimal unitPrice,
+            Integer quantity,
+            BigDecimal subtotal) {
+
         this.productId = productId;
         this.productName = productName;
-        this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.quantity = quantity;
         this.subtotal = subtotal;
     }
 
@@ -37,17 +43,17 @@ public class CartItemResponse {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-    public Integer getQuantity() {
-        return quantity;
-    }
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+    public Integer getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
     public BigDecimal getSubtotal() {
         return subtotal;

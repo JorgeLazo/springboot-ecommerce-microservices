@@ -1,71 +1,98 @@
 package com.jorgelazo.cart.service;
 
-import com.jorgelazo.cart.dto.request.CartItemRequest;
-import com.jorgelazo.cart.dto.response.CartItemResponse;
+import com.jorgelazo.cart.client.ProductClient;
+import com.jorgelazo.cart.client.dto.ProductDto;
+import com.jorgelazo.cart.dto.request.AddItemRequest;
+import com.jorgelazo.cart.entity.Cart;
 import com.jorgelazo.cart.entity.CartItem;
-import com.jorgelazo.cart.exception.CartItemNotFoundException;
-import com.jorgelazo.cart.mapper.CartItemMapper;
+import com.jorgelazo.cart.entity.CartStatus;
+import com.jorgelazo.cart.exception.CartNotFoundException;
+import com.jorgelazo.cart.mapper.CartMapper;
 import com.jorgelazo.cart.repository.CartRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 @Service
 public class CartService {
 
     private final CartRepository repository;
-    private final CartItemMapper mapper;
+    private final ProductClient productClient;
 
-    public CartService(CartRepository repository, CartItemMapper mapper){
+    public CartService(CartRepository repository, ProductClient productClient){
         this.repository = repository;
-        this.mapper = mapper;
+        this.productClient = productClient;
     }
 
-    public List<CartItemResponse> findAll(){
+    public Cart addItem(AddItemRequest request) {
 
-        return repository.findAll()
-        .stream()
-        .map(mapper::toResponse)
-        .toList();
+        ProductDto productdto = productClient.getProduct(request.getProductId());
+
+        Cart cart = getActiveCart(request.getUserId());
+
+
+        // Create a new CartItem
+        CartItem cartItem = new CartItem(productdto.getId(), productdto.getName(), BigDecimal.valueOf(productdto.getPrice()), request.getQuantity());
+
+        // Add the item to the cart
+        cart.addItem(cartItem);
+
+        // Save the cart
+        return repository.save(cart);
     }
 
-    public CartItemResponse save(CartItemRequest cartItemRequest){
+    public Cart removeItem(Long userId, Long productId) {
 
-        CartItem cartItem = mapper.toEntity(cartItemRequest);
-        
-        CartItem savedCartItem = repository.save(cartItem);
+        Cart cart = getActiveCart(userId);
 
-        return mapper.toResponse(savedCartItem);
+        cart.removeItem(productId);
+
+        return repository.save(cart);
+
     }
 
-    public CartItemResponse findById(Long id){
+    public Cart updateQuantity(Long userId,
+                           Long productId,
+                           Integer quantity) {
 
-        CartItem cartItem = getCartItem(id);
+    Cart cart = getActiveCart(userId);
+    
 
-        return mapper.toResponse(cartItem);
+    cart.updateItemQuantity(productId, quantity);
+
+    return repository.save(cart);
+}
+
+public void clearCart(Long userId){
+
+    Cart cart = getActiveCart(userId);
+
+    cart.clear();
+
+    repository.save(cart);
+}
+
+public String checkout(Long userId){
+
+    Cart cart = getActiveCart(userId);
+
+    if(cart.getItems().isEmpty()){
+        throw new IllegalStateException(
+                "Cart is empty");
     }
 
-    public CartItemResponse update(Long id, CartItemRequest cartItemRequest){
+    return "Checkout started successfully";
+}
 
-        CartItem cartItem = getCartItem(id);
+public Cart getActiveCart(Long userId) {
 
-        cartItem.setProductId(cartItemRequest.getProductId());
-        cartItem.setQuantity(cartItemRequest.getQuantity());
-        
-        CartItem updatedCartItem = repository.save(cartItem);
+    return repository.findByUserIdAndStatus(
+            userId,
+            CartStatus.ACTIVE)
+            .orElseThrow(() ->
+                    new CartNotFoundException(
+                            "Active cart not found"));
+                        }
 
-        return mapper.toResponse(updatedCartItem);
-    }
-
-    public void delete(Long id){
-
-        CartItem cartItem = getCartItem(id);
-
-        repository.delete(cartItem);
-    }
-
-    private CartItem getCartItem(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new CartItemNotFoundException("Cart item with id: " + id + " was not found"));
-    } 
 }

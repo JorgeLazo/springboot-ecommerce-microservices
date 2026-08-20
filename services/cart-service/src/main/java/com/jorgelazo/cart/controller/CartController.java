@@ -1,7 +1,9 @@
 package com.jorgelazo.cart.controller;
 
+import com.jorgelazo.cart.dto.request.AddItemRequest;
 import com.jorgelazo.cart.dto.request.CartItemRequest;
 import com.jorgelazo.cart.dto.response.CartItemResponse;
+import com.jorgelazo.cart.entity.Cart;
 import com.jorgelazo.cart.service.CartService;
 
 import jakarta.validation.Valid;
@@ -23,34 +25,49 @@ public class CartController {
         this.service = service;
     }
 
-    @GetMapping
-    public List<CartItemResponse> getAll(){
-        return service.findAll();
+   
+    @PostMapping("/items")   
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cart addItem(@Valid @RequestBody AddItemRequest request) {
+        return service.addItem(request);
     }
 
-    @PostMapping
-    public ResponseEntity<CartItemResponse> create(@Valid @RequestBody CartItemRequest cartItemRequest){
+    @DeleteMapping("/{userId}/items/{productId}")
+    public Cart removeItem(
+            @PathVariable Long userId,
+            @PathVariable Long productId) {
 
-        CartItemResponse cartItemResponse = service.save(cartItemRequest);
-
-        URI location = URI.create("/cart/" + cartItemResponse.getId());
-        
-        return ResponseEntity.created(location).body(cartItemResponse);
+        return service.removeItem(userId, productId);
     }
 
-    @GetMapping("/{id}")
-    public CartItemResponse getById(@PathVariable("id") Long id){
-        return service.findById(id);
-    }
+    @PutMapping("/{userId}/items/{productId}")
+public Cart updateQuantity(
+        @PathVariable Long userId,
+        @PathVariable Long productId,
+        @RequestParam Integer quantity) {
 
-    @PutMapping("/{id}")
-    public CartItemResponse update(@PathVariable("id") Long id, @Valid @RequestBody CartItemRequest cartItemRequest){
-        return service.update(id, cartItemRequest);
-    }
+    return service.updateQuantity(userId, productId, quantity);
+}
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") Long id){
-        service.delete(id);
-    }
+@GetMapping("/{userId}")
+public Cart getActiveCart(@PathVariable Long userId){
+
+    return service.getActiveCart(userId);
+}
+
+@DeleteMapping("/{userId}/items")
+@ResponseStatus(HttpStatus.NO_CONTENT)
+public void clearCart(
+        @PathVariable Long userId){
+
+    service.clearCart(userId);
+}
+
+@PostMapping("/{userId}/checkout")
+public String checkout(
+        @PathVariable Long userId){
+
+    return service.checkout(userId);
+}
+    
 }
